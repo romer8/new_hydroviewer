@@ -1,0 +1,36 @@
+{% extends "new_hydroviewer/base.html" %}
+{% load tethys_gizmos %}
+
+{% block header_buttons %}
+  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
+    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+  </div>
+{% endblock %}
+
+
+{% block app_navigation_items %}
+{{ block.super }}
+
+{% endblock %}
+{% block app_content %}
+  {% include "hydroviewer/ecmwf_map.html" %}
+{% endblock %}
+
+{# Use the after_app_content block for modals #}
+{% block after_app_content %}
+  <!-- Example Modal -->
+{% endblock %}
+
+{% block scripts %}
+  {{ block.super }}
+  <script>
+    var model = "{{ model|safe }}"
+    var geoserver_endpoint = "{{ geoserver_url|safe }}"
+    var geoserver_workspace = "{{ geoserver_workspace|safe }}"
+    var geoserver_region = "{{ geoserver_region|safe }}"
+    var default_watershed_name = "{{ default_watershed_name|safe }}"
+    var streams_layer_name = "{{ streams_layer|safe }}"
+    var stations_layer_name = "{{ stations_layer|safe }}"
+    
+  </script>
+{% endblock %}
