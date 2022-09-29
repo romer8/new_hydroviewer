@@ -40,6 +40,7 @@ from .helpers import *
 from tethysext.hydroviewer.controllers.ecmwf import Ecmf
 base_name = __package__.split('.')[-1]
 
+ecmf_object =  Ecmf()
 
 def set_custom_setting(defaultModelName, defaultWSName):
 
@@ -92,7 +93,7 @@ def home_standard(request):
     return render(request, '{0}/home.html'.format(base_name), context)
 
 def ecmwf(request):
-    ecmf_object =  Ecmf()
+    # ecmf_object =  Ecmf()
     basic_settings = ecmf_object.get_start_custom_settings(request)
     dates_watershed = ecmf_object.get_available_dates_watershed(request)
     # Date Picker Options
@@ -145,10 +146,22 @@ def ecmwf(request):
     return render(request, 'new_hydroviewer/home.html', context)
     # return render(request, 'hydroviewer/ecmwf.html', context)
 
+
 def get_warning_points(request):
-    ecmf_object =  Ecmf()
+    # ecmf_object =  Ecmf()
     warning_points = ecmf_object.get_warning_points(request)
     return JsonResponse(warning_points)
+
+
+def ecmwf_get_time_series(request):
+    hydroviewer_figure = ecmf_object.ecmwf_get_time_series(request)
+    chart_obj = PlotlyView(hydroviewer_figure)
+
+    context = {
+        'gizmo_object': chart_obj,
+    }
+    return render(request, f'{0}/gizmo_ajax.html'.format(base_name), context)
+
 
 # def ecmwf(request):
 

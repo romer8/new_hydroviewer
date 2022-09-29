@@ -31,10 +31,16 @@ class NewHydroviewer(TethysAppBase):
                 controller='new_hydroviewer.controllers.home'
             ),
             UrlMap(
-                name='home',
+                name='get-warning-points-ecmwf',
                 url='get-warning-points-ecmwf/',
                 controller='new_hydroviewer.controllers.get_warning_points'
             ),
+            UrlMap(
+                name='ecmwf-get-time-series',
+                url='ecmwf-get-time-series/',
+                controller='new_hydroviewer.controllers.ecmwf_get_time_series'
+            ),
+            
         )
 
         return url_maps
