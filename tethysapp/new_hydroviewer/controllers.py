@@ -7,7 +7,7 @@ from tethys_sdk.base import TethysAppBase
 from tethys_sdk.gizmos import PlotlyView
 from tethys_sdk.workspaces import app_workspace
 from tethys_sdk.gizmos import Button, DatePicker, PlotlyView, SelectInput
-
+import asyncio
 
 import os
 import pytz
@@ -154,15 +154,26 @@ def get_warning_points(request):
 
 
 def ecmwf_get_time_series(request):
-    hydroviewer_figure = ecmf_object.ecmwf_get_time_series(request)
+    hydroviewer_figure = ecmf_object.ecmwf_get_time_series(request);
     chart_obj = PlotlyView(hydroviewer_figure)
 
     context = {
         'gizmo_object': chart_obj,
     }
-    return render(request, f'{0}/gizmo_ajax.html'.format(base_name), context)
+    return render(request, f'{base_name}/gizmo_ajax.html', context)
 
+# def get_charts(request):
+    
+#     asyncio.run(ecmf_object.async_request(request))
+#     pass
 
+# async def async_request(self,request):
+#     async_client = httpx.AsyncClient()
+
+#     tasks = [asyncio.create_task(self.forecast_async_wrapper(request,async_client))]
+#     # tasks = [asyncio.create_task(self.forecast_async_wrapper(request,async_client)),asyncio.create_task(self.historical_async_wrapper(request,async_client))]
+
+#     results = asyncio.gather(*tasks)
 # def ecmwf(request):
 
 #     # Can Set Default permissions : Only allowed for admin users

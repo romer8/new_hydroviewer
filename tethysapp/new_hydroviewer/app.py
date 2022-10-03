@@ -1,6 +1,6 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
 from tethys_sdk.app_settings import CustomSetting, SpatialDatasetServiceSetting
-
+from tethysext.hydroviewer.ext import Hydroviewer
 
 class NewHydroviewer(TethysAppBase):
     """
@@ -42,6 +42,9 @@ class NewHydroviewer(TethysAppBase):
             ),
             
         )
+        # print(url_maps)
+        # url_maps = url_maps + (Hydroviewer().url_maps())
+        # print(Hydroviewer().url_maps())
 
         return url_maps
 
