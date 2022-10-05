@@ -161,6 +161,14 @@ def ecmwf_get_time_series(request):
         'gizmo_object': chart_obj,
     }
     return render(request, f'{base_name}/gizmo_ajax.html', context)
+def get_historic_data(request):
+    hydroviewer_figure = ecmf_object.get_historic_data(request);
+    chart_obj = PlotlyView(hydroviewer_figure)
+
+    context = {
+        'gizmo_object': chart_obj,
+    }
+    return render(request, f'{base_name}/gizmo_ajax.html', context)
 
 # def get_charts(request):
     

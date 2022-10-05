@@ -1,6 +1,5 @@
 from tethys_sdk.base import TethysAppBase, url_map_maker
-from tethys_sdk.app_settings import CustomSetting, SpatialDatasetServiceSetting
-from tethysext.hydroviewer.ext import Hydroviewer
+from tethys_sdk.app_settings import CustomSetting, SpatialDatasetServiceSetting, PersistentStoreDatabaseSetting
 
 class NewHydroviewer(TethysAppBase):
     """
@@ -39,6 +38,11 @@ class NewHydroviewer(TethysAppBase):
                 name='ecmwf-get-time-series',
                 url='ecmwf-get-time-series/',
                 controller='new_hydroviewer.controllers.ecmwf_get_time_series'
+            ),
+            UrlMap(
+                name='get-historic-data',
+                url='get-historic-data/',
+                controller='new_hydroviewer.controllers.get_historic_data'
             ),
             
         )
@@ -163,3 +167,15 @@ class NewHydroviewer(TethysAppBase):
                 required=False
             ),
         )
+
+    #### Persistant storage ###
+    def persistent_store_settings(self):
+        ps_settings = (
+            PersistentStoreDatabaseSetting(
+                name='geoglows',
+                description='catalogs database',
+                initializer='new_hydroviewer.init_stores.init_catalog_db',
+                required=True
+            ),
+        )
+        return ps_settings
