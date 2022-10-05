@@ -17,7 +17,10 @@
 
 {% endblock %}
 {% block app_content %}
-  {% include "hydroviewer/ecmwf_map.html" %}
+<div id="map" class="map">
+  {% include "hydroviewer/map_legend.html" %}
+
+</div>
 {% endblock %}
 
 {# Use the after_app_content block for modals #}

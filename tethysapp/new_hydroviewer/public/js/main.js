@@ -18,7 +18,9 @@ var HYDROVIEWER_PACKAGE = (function() {
         console.log(geoserver_endpoint,streams_layer_name,stations_layer_name);
         map_object.add_streams_and_stations(map,geoserver_endpoint,streams_layer_name,stations_layer_name);
         map_object.fit_view_streams_wms(map,geoserver_endpoint,geoserver_workspace,streams_layer_name);
-        map_object.create_wms_events(map,[map_object.getLayersObject().get_streams_wms()],'ecmwf-get-time-series/');
+        map_object.create_wms_events_popup(map,[map_object.getLayersObject().get_streams_wms()],'ecmwf-get-time-series/');
+        // map_object.create_wms_events_popup(map,[map_object.getLayersObject().get_streams_wms()],'ecmwf-get-time-series/','get-historic-data/');
+
 
         get_warning_points_local(map);
         console.log(model)   
