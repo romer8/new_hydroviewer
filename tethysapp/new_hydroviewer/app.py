@@ -7,7 +7,7 @@ class NewHydroviewer(TethysAppBase):
     """
 
     name = 'New Hydroviewer'
-    index = 'new_hydroviewer:home'
+    index = 'home'
     icon = 'new_hydroviewer/images/icon.gif'
     package = 'new_hydroviewer'
     root_url = 'new-hydroviewer'
@@ -16,41 +16,41 @@ class NewHydroviewer(TethysAppBase):
     tags = ''
     enable_feedback = False
     feedback_emails = []
+    controller_modules = ['controllers', ]
+    # def url_maps(self):
+    #     """
+    #     Add controllers
+    #     """
+    #     UrlMap = url_map_maker(self.root_url)
 
-    def url_maps(self):
-        """
-        Add controllers
-        """
-        UrlMap = url_map_maker(self.root_url)
-
-        url_maps = (
-            UrlMap(
-                name='home',
-                url='new-hydroviewer',
-                controller='new_hydroviewer.controllers.home'
-            ),
-            UrlMap(
-                name='get-warning-points-ecmwf',
-                url='get-warning-points-ecmwf/',
-                controller='new_hydroviewer.controllers.get_warning_points'
-            ),
-            UrlMap(
-                name='ecmwf-get-time-series',
-                url='ecmwf-get-time-series/',
-                controller='new_hydroviewer.controllers.ecmwf_get_time_series'
-            ),
-            UrlMap(
-                name='get-historic-data',
-                url='get-historic-data/',
-                controller='new_hydroviewer.controllers.get_historic_data'
-            ),
+    #     url_maps = (
+    #         UrlMap(
+    #             name='home',
+    #             url='new-hydroviewer',
+    #             controller='new_hydroviewer.controllers.home'
+    #         ),
+    #         UrlMap(
+    #             name='get-warning-points-ecmwf',
+    #             url='get-warning-points-ecmwf/',
+    #             controller='new_hydroviewer.controllers.get_warning_points'
+    #         ),
+    #         UrlMap(
+    #             name='ecmwf-get-time-series',
+    #             url='ecmwf-get-time-series/',
+    #             controller='new_hydroviewer.controllers.ecmwf_get_time_series'
+    #         ),
+    #         UrlMap(
+    #             name='get-historic-data',
+    #             url='get-historic-data/',
+    #             controller='new_hydroviewer.controllers.get_historic_data'
+    #         ),
             
-        )
-        # print(url_maps)
-        # url_maps = url_maps + (Hydroviewer().url_maps())
-        # print(Hydroviewer().url_maps())
+    #     )
+    #     # print(url_maps)
+    #     # url_maps = url_maps + (Hydroviewer().url_maps())
+    #     # print(Hydroviewer().url_maps())
 
-        return url_maps
+    #     return url_maps
 
 
     def spatial_dataset_service_settings(self):
@@ -80,7 +80,7 @@ class NewHydroviewer(TethysAppBase):
                 type=CustomSetting.TYPE_STRING,
                 description='Workspace within Geoserver where web service is',
                 required=True,
-                default='peru_hydroviewer',
+                default='brazil_hydroviewer',
             ),
             CustomSetting(
                 name='region',
@@ -89,33 +89,33 @@ class NewHydroviewer(TethysAppBase):
                 required=True,
                 default='south_america-geoglows',
             ),
-            CustomSetting(
-                name='keywords',
-                type=CustomSetting.TYPE_STRING,
-                description='Keyword(s) for visualizing watersheds in HydroViewer',
-                required=True,
-                default='peru, south_america',
-            ),
-            CustomSetting(
-                name='zoom_info',
-                type=CustomSetting.TYPE_STRING,
-                description='lon,lat,zoom_level',
-                required=True,
-                default='-76,-10,5',
-            ),
-            CustomSetting(
-                name='default_model_type',
-                type=CustomSetting.TYPE_STRING,
-                description='Default Model Type : (Options : ECMWF-RAPID, LIS-RAPID)',
-                required=False,
-                default='ECMWF-RAPID',
-            ),
-            CustomSetting(
-                name='static_GeoJSON_path',
-                type=CustomSetting.TYPE_STRING,
-                description='Default GeoJson path for the different regions',
-                required=False,
-            ),
+            # CustomSetting(
+            #     name='keywords',
+            #     type=CustomSetting.TYPE_STRING,
+            #     description='Keyword(s) for visualizing watersheds in HydroViewer',
+            #     required=True,
+            #     default='peru, south_america',
+            # ),
+            # CustomSetting(
+            #     name='zoom_info',
+            #     type=CustomSetting.TYPE_STRING,
+            #     description='lon,lat,zoom_level',
+            #     required=True,
+            #     default='-76,-10,5',
+            # ),
+            # CustomSetting(
+            #     name='default_model_type',
+            #     type=CustomSetting.TYPE_STRING,
+            #     description='Default Model Type : (Options : ECMWF-RAPID, LIS-RAPID)',
+            #     required=False,
+            #     default='ECMWF-RAPID',
+            # ),
+            # CustomSetting(
+            #     name='static_GeoJSON_path',
+            #     type=CustomSetting.TYPE_STRING,
+            #     description='Default GeoJson path for the different regions',
+            #     required=False,
+            # ),
             CustomSetting(
                 name='reach_ids_path',
                 type=CustomSetting.TYPE_STRING,
@@ -134,38 +134,40 @@ class NewHydroviewer(TethysAppBase):
                 description='Name of the Streams Layer in the GeoServer Service',
                 required=False,
             ),
-            CustomSetting(
-                name='Level_boundaries',
-                type=CustomSetting.TYPE_STRING,
-                description='Name of the Level Boundaries in the GeoServer Service',
-                required=False,
-            ),
+
             CustomSetting(
                 name='default_watershed_name',
                 type=CustomSetting.TYPE_STRING,
-                description='Default Watershed Name: (For ex: "South America (Brazil)") ',
+                description='Default Watershed Name',
                 required=False,
-                default='South America (Brazil)',
+                default='south_america-geoglows',
             ),
             CustomSetting(
-                name='show_dropdown',
-                type=CustomSetting.TYPE_BOOLEAN,
-                description='Hide Watershed Options when default present (True or False) ',
-                required=True,
-                value=True
-            ),
-            CustomSetting(
-                name='lis_path',
+                name='default_subbasin_name',
                 type=CustomSetting.TYPE_STRING,
-                description='Path to local LIS-RAPID directory',
-                required=False
-            ),
-            CustomSetting(
-                name='hiwat_path',
-                type=CustomSetting.TYPE_STRING,
-                description='Path to local HIWAT-RAPID directory',
-                required=False
-            ),
+                description='Default subbasin Name',
+                required=False,
+                default='brazil',
+            )
+            # CustomSetting(
+            #     name='show_dropdown',
+            #     type=CustomSetting.TYPE_BOOLEAN,
+            #     description='Hide Watershed Options when default present (True or False) ',
+            #     required=True,
+            #     value=True
+            # ),
+            # CustomSetting(
+            #     name='lis_path',
+            #     type=CustomSetting.TYPE_STRING,
+            #     description='Path to local LIS-RAPID directory',
+            #     required=False
+            # ),
+            # CustomSetting(
+            #     name='hiwat_path',
+            #     type=CustomSetting.TYPE_STRING,
+            #     description='Path to local HIWAT-RAPID directory',
+            #     required=False
+            # ),
         )
 
     #### Persistant storage ###

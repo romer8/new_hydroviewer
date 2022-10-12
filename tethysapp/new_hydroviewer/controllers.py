@@ -7,6 +7,7 @@ from tethys_sdk.base import TethysAppBase
 from tethys_sdk.gizmos import PlotlyView
 from tethys_sdk.workspaces import app_workspace
 from tethys_sdk.gizmos import Button, DatePicker, PlotlyView, SelectInput
+from tethys_sdk.routing import controller
 import asyncio
 
 import os
@@ -38,121 +39,75 @@ from bs4 import BeautifulSoup
 from .app import NewHydroviewer as app
 from .helpers import *
 from tethysext.hydroviewer.controllers.ecmwf import Ecmf
+
 base_name = __package__.split('.')[-1]
 
 ecmf_object =  Ecmf()
 
-def set_custom_setting(defaultModelName, defaultWSName):
-
-    from tethys_apps.models import TethysApp
-    db_app = TethysApp.objects.get(package=app.package)
-    custom_settings = db_app.custom_settings
-
-    db_setting = db_app.custom_settings.get(name='default_model_type')
-    db_setting.value = defaultModelName
-    db_setting.save()
-
-    db_setting = db_app.custom_settings.get(name='default_watershed_name')
-    db_setting.value = defaultWSName
-    db_setting.save()
-
-
+@controller(name='home', url='new-hydroviewer')
 def home(request):
-
-    # Check if we have a default model. If we do, then redirect the user to the default model's page
-    default_model = app.get_custom_setting('default_model_type')
-    if default_model:
-        model_func = switch_model(default_model)
-        if model_func is not 'invalid':
-            return globals()[model_func](request)
-        else:
-            return home_standard(request)
-    else:
-        return home_standard(request)
-
-
-def home_standard(request):
-    model_input = SelectInput(display_text='',
-                              name='model',
-                              multiple=False,
-                              options=[('Select Model', ''), ('ECMWF-RAPID', 'ecmwf'), ('LIS-RAPID', 'lis')],
-                              initial=['Select Model'],
-                              original=True)
-
-    zoom_info = TextInput(display_text='',
-                          initial=json.dumps(app.get_custom_setting('zoom_info')),
-                          name='zoom_info',
-                          disabled=True)
-
-    context = {
-        "base_name": base_name,
-        "model_input": model_input,
-        "zoom_info": zoom_info
-    }
-
-    return render(request, '{0}/home.html'.format(base_name), context)
-
-def ecmwf(request):
     # ecmf_object =  Ecmf()
     basic_settings = ecmf_object.get_start_custom_settings(request)
     dates_watershed = ecmf_object.get_available_dates_watershed(request)
     # Date Picker Options
-    date_picker = DatePicker(name='datesSelect',
-                                display_text='Date',
-                                autoclose=True,
-                                format='yyyy-mm-dd',
-                                start_date=dates_watershed[-1][0],
-                                end_date=dates_watershed[1][0],
-                                start_view='month',
-                                today_button=True,
-                                initial='')
-    today = dt.datetime.now()
-    date = str(today.strftime("%d")) + '/' + str(today.strftime("%m")) + '/' + str(today.year)
-    date2 = str(today.strftime("%d")) + '/' + str(today.strftime("%m")) + '/' + str(int(str(today.year)) - 1)
+    # date_picker = DatePicker(name='datesSelect',
+    #                             display_text='Date',
+    #                             autoclose=True,
+    #                             format='yyyy-mm-dd',
+    #                             start_date=dates_watershed[-1][0],
+    #                             end_date=dates_watershed[1][0],
+    #                             start_view='month',
+    #                             today_button=True,
+    #                             initial='')
+    # today = dt.datetime.now()
+    # date = str(today.strftime("%d")) + '/' + str(today.strftime("%m")) + '/' + str(today.year)
+    # date2 = str(today.strftime("%d")) + '/' + str(today.strftime("%m")) + '/' + str(int(str(today.year)) - 1)
 
-    startdateobs = DatePicker(name='startdateobs',
-                            display_text='Start Date',
-                            autoclose=True,
-                            format='dd/mm/yyyy',
-                            start_date='01/01/1950',
-                            start_view='month',
-                            today_button=True,
-                            initial=date2,
-                            classes='datepicker')
+    # startdateobs = DatePicker(name='startdateobs',
+    #                         display_text='Start Date',
+    #                         autoclose=True,
+    #                         format='dd/mm/yyyy',
+    #                         start_date='01/01/1950',
+    #                         start_view='month',
+    #                         today_button=True,
+    #                         initial=date2,
+    #                         classes='datepicker')
 
-    enddateobs = DatePicker(name='enddateobs',
-                            display_text='End Date',
-                            autoclose=True,
-                            format='dd/mm/yyyy',
-                            start_date='01/01/1950',
-                            start_view='month',
-                            today_button=True,
-                            initial=date,
-                            classes='datepicker')
+    # enddateobs = DatePicker(name='enddateobs',
+    #                         display_text='End Date',
+    #                         autoclose=True,
+    #                         format='dd/mm/yyyy',
+    #                         start_date='01/01/1950',
+    #                         start_view='month',
+    #                         today_button=True,
+    #                         initial=date,
+    #                         classes='datepicker')
 
-    dates_context = {
-        "startdateobs": startdateobs,
-        "enddateobs": enddateobs,
-        "date_picker": date_picker,
-    }
+    # dates_context = {
+    #     "startdateobs": startdateobs,
+    #     "enddateobs": enddateobs,
+    #     "date_picker": date_picker,
+    # }
 
-    basic_settings.update(dates_context)
+    # basic_settings.update(dates_context)
 
     context = basic_settings
+
     #adding default model type if needed 
-    context.update({
-        "model":app.get_custom_setting("default_model_type")
-    })
+    # context.update({
+    #     "model":app.get_custom_setting("default_model_type")
+    # })
+
     return render(request, 'new_hydroviewer/home.html', context)
     # return render(request, 'hydroviewer/ecmwf.html', context)
 
-
+@controller(name='get-warning-points-ecmwf', url='get-warning-points-ecmwf')
 def get_warning_points(request):
     # ecmf_object =  Ecmf()
     warning_points = ecmf_object.get_warning_points(request)
     return JsonResponse(warning_points)
 
-
+@controller(name='ecmwf-get-time-series', url='ecmwf-get-time-series')
 def ecmwf_get_time_series(request):
     hydroviewer_figure = ecmf_object.ecmwf_get_time_series(request);
     chart_obj = PlotlyView(hydroviewer_figure)
@@ -161,6 +116,8 @@ def ecmwf_get_time_series(request):
         'gizmo_object': chart_obj,
     }
     return render(request, f'{base_name}/gizmo_ajax.html', context)
+
+@controller(name='get-historic-data', url='get-historic-data')
 def get_historic_data(request):
     hydroviewer_figure = ecmf_object.get_historic_data(request);
     chart_obj = PlotlyView(hydroviewer_figure)
