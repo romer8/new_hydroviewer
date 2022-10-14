@@ -1,4 +1,5 @@
 {% extends "new_hydroviewer/base.html" %}
+
 {% load tethys_gizmos %}
 
 {% block import_gizmos %}
@@ -6,8 +7,11 @@
 {% endblock %}
 
 {% block header_buttons %}
-  <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
-    <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
+
+  <div class="header-button" data-bs-toggle="tooltip" data-bs-placement="bottom" title="About">
+    <a data-bs-toggle="modal" data-bs-target="#about">
+      <i class="bi bi-info-circle-fill"></i>
+    </a>
   </div>
 {% endblock %}
 
@@ -26,7 +30,8 @@
 {# Use the after_app_content block for modals #}
 {% block after_app_content %}
   <!-- Example Modal -->
-  {% include "hydroviewer/geoglows_modal.html" %}
+  {% include "hydroviewer/modal_exl.html" %}
+
 
 {% endblock %}
 
